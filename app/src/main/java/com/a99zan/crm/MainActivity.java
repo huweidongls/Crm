@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.JsResult;
@@ -59,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
 
+
+        //http://jfz.99zan.vip/webapp/www/index.html#login  积分制
+        //http://www.crm99zan.com/mobile.php?m=user&a=login   Crm
+
         webView.loadUrl("http://www.crm99zan.com/mobile.php?m=user&a=login");
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
                 view.loadUrl(url);
+                Log.e("111", url+"");
                 return true;
             }
         });
@@ -100,6 +106,52 @@ public class MainActivity extends AppCompatActivity {
                 b.create().show();
                 return true;
             }
+            //设置响应js 的Confirm()函数
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
+                b.setTitle("Confirm");
+                b.setMessage(message);
+                b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.confirm();
+                    }
+                });
+                b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.cancel();
+                    }
+                });
+                b.create().show();
+                return true;
+            }
+            //设置响应js 的Prompt()函数
+//            @Override
+//            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
+//                final View v = View.inflate(TestAlertActivity.this, R.layout.prompt_dialog, null);
+//                ((TextView) v.findViewById(R.id.prompt_message_text)).setText(message);
+//                ((EditText) v.findViewById(R.id.prompt_input_field)).setText(defaultValue);
+//                AlertDialog.Builder b = new AlertDialog.Builder(TestAlertActivity.this);
+//                b.setTitle("Prompt");
+//                b.setView(v);
+//                b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        String value = ((EditText) v.findViewById(R.id.prompt_input_field)).getText().toString();
+//                        result.confirm(value);
+//                    }
+//                });
+//                b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        result.cancel();
+//                    }
+//                });
+//                b.create().show();
+//                return true;
+//            }
         });
 
     }
